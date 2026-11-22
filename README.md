@@ -9,7 +9,7 @@ A lightweight, zero-background-overhead weekly update reminder and desktop launc
 - **Automated Monthly Cache Cleanup:** Runs `paccache -rk2`, `paccache -ruk0`, and AUR cache cleanup once per month.
 
 ## 📦 Installation
-    git clone https://github.com
+    git clone https://github.com/T5000-noob/arch-weekly-desktop-updater.git
     cd arch-weekly-desktop-updater
     chmod +x install.sh uninstall.sh
     ./install.sh
