@@ -2,21 +2,28 @@
 
 DESKTOP_DIR=$(xdg-user-dir DESKTOP)
 DESKTOP_ICON="$DESKTOP_DIR/Arch-Weekly-Update.desktop"
+ENABLE_AUR_UPDATE=false
 
 if command -v paru >/dev/null; then
-    AUR_CMD="paru -Sua"
-    AUR_CLEAN="paru -Sc --noconfirm"
+    AUR_UPDATE_CMD="paru -Sua"
+    AUR_CLEAN_CMD="paru -Sc --noconfirm"
 elif command -v yay >/dev/null; then
-    AUR_CMD="yay -Sua"
-    AUR_CLEAN="yay -Sc --noconfirm"
+    AUR_UPDATE_CMD="yay -Sua"
+    AUR_CLEAN_CMD="yay -Sc --noconfirm"
 else
-    AUR_CMD="true"
-    AUR_CLEAN="true"
+    AUR_UPDATE_CMD="true"
+    AUR_CLEAN_CMD="true"
+fi
+
+if [ "$ENABLE_AUR_UPDATE" = true ]; then
+    UPDATE_PIPELINE="sudo pacman -Syu && $AUR_UPDATE_CMD"
+else
+    UPDATE_PIPELINE="sudo pacman -Syu"
 fi
 
 INNER_CMD='
     echo "=== Starting Weekly System Update ==="
-    if sudo pacman -Syu && '"$AUR_CMD"'; then
+    if '"$UPDATE_PIPELINE"'; then
         STAMP_FILE="$HOME/.local/state/last-paccache-month"
         THIS_MONTH=$(date +%Y-%m)
         if [ "$(cat "$STAMP_FILE" 2>/dev/null)" != "$THIS_MONTH" ]; then
@@ -24,7 +31,7 @@ INNER_CMD='
             echo "=== Running Monthly Package Cache Cleanup ==="
             sudo paccache -rk2
             sudo paccache -ruk0
-            '"$AUR_CLEAN"'
+            '"$AUR_CLEAN_CMD"'
             mkdir -p "$HOME/.local/state"
             echo "$THIS_MONTH" > "$STAMP_FILE"
         fi
@@ -52,10 +59,14 @@ else
 fi
 
 OFFICIAL=$(checkupdates 2>/dev/null | wc -l)
-if command -v paru >/dev/null; then
-    AUR=$(paru -Qua 2>/dev/null | wc -l)
-elif command -v yay >/dev/null; then
-    AUR=$(yay -Qua 2>/dev/null | wc -l)
+if [ "$ENABLE_AUR_UPDATE" = true ]; then
+    if command -v paru >/dev/null; then
+        AUR=$(paru -Qua 2>/dev/null | wc -l)
+    elif command -v yay >/dev/null; then
+        AUR=$(yay -Qua 2>/dev/null | wc -l)
+    else
+        AUR=0
+    fi
 else
     AUR=0
 fi
