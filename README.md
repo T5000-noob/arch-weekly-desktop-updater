@@ -3,10 +3,10 @@
 A lightweight, zero-background-overhead weekly update reminder and desktop launcher for **CachyOS, Arch Linux, and Arch-based distributions**.
 
 ## ✨ Key Features
-- **Zero Background Overhead:** Wakes up once a week on your chosen day (or on your next boot if your PC was off).
-- **Dynamic Desktop Shortcut:** Displays the combined count of Official (`pacman`) + AUR (`paru`/`yay`) updates.
-- **Smart Shortcut Management:** Removes the icon when `0` updates remain, or updates the remaining count if closed mid-way.
-- **Automated Monthly Cache Cleanup:** Runs `paccache -rk2`, `paccache -ruk0`, and AUR cache cleanup once per month.
+- **Zero Background Overhead:** Wakes up once a week on your chosen day.
+- **Dynamic Desktop Shortcut:** ~~Displays combined updates.~~ Now defaults to **Official (`pacman`) packages only** (`ENABLE_AUR_UPDATE=false`) for stability, with optional AUR support (`ENABLE_AUR_UPDATE=true`) available.
+- **Smart Shortcut Management:** Automatically manages shortcut icons based on update status.
+- **Automated Monthly Cache Cleanup:** Regularly cleans package caches.
 
 ## 📦 Installation
     git clone https://github.com/T5000-noob/arch-weekly-desktop-updater.git
@@ -16,3 +16,4 @@ A lightweight, zero-background-overhead weekly update reminder and desktop launc
 
 ## 🗑️ Uninstallation
     ./uninstall.sh
+    
